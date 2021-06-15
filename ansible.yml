@@ -55,6 +55,49 @@
     when:
         - docker_compose_check.msg is defined
         - docker_compose_check.msg.find('No such file or directory') != -1
+   
+   tasks:
+  - name: Install git
+    yum:
+      name: git
+      state: present
+
+  - name: Install wget
+    yum:
+      name: wget
+      state: present
+
+  - name: Install unzip
+    yum:
+      name: unzip
+      state: present
+
+  - name: Install vim
+    yum:
+      name: vim
+      state: present
+
+  - name: install java-1.8.0*
+    yum:
+      name: java-1.8.0*
+      state: latest
+
+  - name: download tomcat
+    get_url:
+        url: https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.94/bin/apache-tomcat-7.0.94.tar.gz
+        dest: /home/centos/
+    become: no
+
+  - name: unarchive tomcat
+    unarchive:
+     src: https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.94/bin/apache-tomcat-7.0.94.tar.gz
+     dest: /home/centos/
+     remote_src: true
+    become: no
+
+  - name: Port for tomcat 8080
+    command: "nohup /home/centos/apache-tomcat-7.0.94/bin/startup.sh"
+    become: no   
 
 - name: install sonarcube
   hosts: sonar
@@ -91,53 +134,13 @@
     command: "nohup /home/centos/sonarqube-6.7.7/bin/linux-x86-64/sonar.sh status"
     become: no
 
-- name: install software in build servers
-  hosts: build
-  become: yes
+  - name: install software in SCM servers
+    hosts: SCM
+    become: yes
 
-
-  tasks:
   - name: Install git
     yum:
       name: git
-      state: present
-
-  - name: Install wget
-    yum:
-      name: wget
-      state: present
-
-  - name: Install unzip
-    yum:
-      name: unzip
-      state: present
-
-  - name: Install vim
-    yum:
-      name: vim
-      state: present
-
-  - name: install java-1.8.0*
-    yum:
-      name: java-1.8.0*
-      state: latest
-
-  - name: download tomcat
-    get_url:
-        url: https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.94/bin/apache-tomcat-7.0.94.tar.gz
-        dest: /home/ec2-user
-    become: no
-
-  - name: unarchive tomcat
-    unarchive:
-     src: https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.94/bin/apache-tomcat-7.0.94.tar.gz
-     dest: /home/ec2-user/
-     remote_src: true
-    become: no
-
-  - name: Port for tomcat 8080
-    command: "nohup /home/ec2-user/apache-tomcat-7.0.94/bin/startup.sh"
-    become: no   
-    
+      state: present      
 ...
   
