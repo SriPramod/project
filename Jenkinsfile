@@ -23,7 +23,7 @@ pipeline {
             steps{
                 node('scm-node-label') 
                  {
-                    git 'https://github.com/patra1980/project.git'
+                    git 'https://github.com/SriPramod/project.git'
                  }
                 }
               }
@@ -38,26 +38,29 @@ pipeline {
                    withSonarQubeEnv('sonarqube') { 
                        sh "${scannerHome}/bin/sonar-scanner \
                        -D sonar.login=admin \
-                       -D sonar.password=admin \
+                       -D sonar.password=admin123 \
                        -D sonar.projectKey=sonarqubetest \
                        -D sonar.sources=. \
                        -D sonar.exclusions=vendor/**,resource/**,**/*.java \
-                       -D sonar.host.url=http://172.31.78.187:9000/" }
+                       -D sonar.host.url=http://172.31.21.91:9000/" }
                    }
                    }
                  }
         }
          
-         stage("docker")
+         stage("Docker")
          {
              steps{
                  node('docker-label')   
                  {
-                   script{
+                     script{
+                       git 'https://github.com/SriPramod/project.git'
+                       sh 'mvn package'
                        dockerImage = docker.build registry + ":$BUILD_NUMBER"  
                        docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {   
                            dockerImage.push() }
                        sh "docker rmi -f $registry:$BUILD_NUMBER"
+                       sh 'mvn clean package'
                          }	
                  }
              }
