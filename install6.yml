@@ -1,0 +1,143 @@
+---
+# Set up Docker
+
+- name: install docker and docker compose on centos
+  hosts: docker
+  become: true
+  
+  tasks:
+  - name: upgrade all packages
+    yum: name=* state=latest
+
+  - name: check if the docker is installed
+    command: systemctl status docker
+    register: docker_check
+    ignore_errors: yes
+ 
+  - name: download the Docker installer
+    get_url: 
+      url: https://get.docker.com/
+      dest: /root/install_docker.sh
+      mode: 0700
+    when: docker_check.stderr.find('service could not be found') != -1
+  
+  - name: Install Docker
+    shell: /root/install_docker.sh
+    when: docker_check.stderr.find('service could not be found') != -1
+
+  - name: Remove the Docker installer file
+    file:
+      state: absent
+      path: /root/install_docker.sh
+
+  - name: Enable the Docker daemon in systemd
+    systemd:
+      name: docker
+      enabled: yes
+      masked: no
+
+  - name: Start the Docker daemon
+    systemd:
+      name: docker
+      state: started
+      masked: no
+
+  - name: Check if Docker Compose is installed
+    command: docker-compose --version
+    register: docker_compose_check
+    ignore_errors: yes
+  
+  - name: Download and install Docker Compose
+    get_url:
+      url: https://github.com/docker/compose/releases/download/1.21.2/docker-compose-Linux-x86_64
+      dest: /usr/bin/docker-compose
+      mode: 0755
+    when:
+        - docker_compose_check.msg is defined
+        - docker_compose_check.msg.find('No such file or directory') != -1
+
+- name: install sonarcube
+  hosts: sonar
+  become: yes
+
+  tasks:
+  - name: install java
+    yum:
+      name: java-1.8.0*
+      state: present
+
+  - name: unzip the file
+    yum:
+      name: unzip
+      state: present
+
+  - name: install url
+    get_url:
+        url: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-6.7.7.zip
+        dest: /home/centos/
+
+  - name: unarchive sonarcube
+    unarchive:
+     src: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-6.7.7.zip
+     dest: /home/centos/
+     remote_src: true
+    become: no
+
+  - name: start the sonarcube
+    command: "nohup /home/centos/sonarqube-6.7.7/bin/linux-x86-64/sonar.sh restart"
+    become: no
+
+  - name: status the sonarcube
+    command: "nohup /home/centos/sonarqube-6.7.7/bin/linux-x86-64/sonar.sh status"
+    become: no
+
+- name: install software in build servers
+  hosts: build
+  become: yes
+
+
+  tasks:
+  - name: Install git
+    yum:
+      name: git
+      state: present
+
+  - name: Install wget
+    yum:
+      name: wget
+      state: present
+
+  - name: Install unzip
+    yum:
+      name: unzip
+      state: present
+
+  - name: Install vim
+    yum:
+      name: vim
+      state: present
+
+  - name: install java-1.8.0*
+    yum:
+      name: java-1.8.0*
+      state: latest
+
+  - name: download tomcat
+    get_url:
+        url: https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.94/bin/apache-tomcat-7.0.94.tar.gz
+        dest: /home/ec2-user
+    become: no
+
+  - name: unarchive tomcat
+    unarchive:
+     src: https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.94/bin/apache-tomcat-7.0.94.tar.gz
+     dest: /home/ec2-user/
+     remote_src: true
+    become: no
+
+  - name: Port for tomcat 8080
+    command: "nohup /home/ec2-user/apache-tomcat-7.0.94/bin/startup.sh"
+    become: no   
+    
+...
+  
