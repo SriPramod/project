@@ -31,7 +31,7 @@ pipeline {
          stage("SonarQube")
          {
             steps{
-                node('sonarserver')
+                node('sonar-label')
                   {
                     script{  
                      def scannerHome = tool 'SonarQube Scanner';
@@ -51,7 +51,7 @@ pipeline {
          stage("docker")
          {
              steps{
-                 node('dockerserver')   
+                 node('docker-label')   
                  {
                    script{
                        dockerImage = docker.build registry + ":$BUILD_NUMBER"  
