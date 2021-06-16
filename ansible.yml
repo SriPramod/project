@@ -134,9 +134,9 @@
     command: "nohup /home/centos/sonarqube-6.7.7/bin/linux-x86-64/sonar.sh status"
     become: no
 
-  - name: install software in SCM servers
-    hosts: SCM
-    become: yes
+- name: install software in SCM servers
+  hosts: SCM
+  become: yes
 
   - name: Install git
     yum:
