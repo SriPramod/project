@@ -138,9 +138,9 @@
   hosts: SCM
   become: yes
 
-  - name: Install git
-    yum:
-      name: git
-      state: present      
+   - name: Install git
+     yum:
+       name: git
+       state: present      
 ...
   
