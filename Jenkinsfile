@@ -52,12 +52,11 @@ pipeline {
          {
              steps{
                  node('docker-label')   
-                 {
-                    git 'https://github.com/SriPramod/project.git'
-                    sh 'mvn package'  
-                    sh "docker build -t SriPramod/project:${env.BUILD_ID} ." 
-  
-                         }	
+                    {
+                      git 'https://github.com/SriPramod/project.git'
+                      sh "mvn package" 
+                      sh "docker build -t SriPramod/project:${env.BUILD_ID} ." 
+                     }	
                  }
              }
          
