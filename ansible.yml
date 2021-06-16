@@ -137,7 +137,8 @@
 - name: install software in SCM servers
   hosts: SCM
   become: yes
-
+ 
+  tasks:
   - name: Install git
     yum:
       name: git
