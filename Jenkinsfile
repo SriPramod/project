@@ -53,9 +53,9 @@ pipeline {
              steps{
                  node('docker-label')   
                  {
+                     git 'https://github.com/SriPramod/project.git'
+                     sh 'mvn package'
                      script{
-                       git 'https://github.com/SriPramod/project.git'
-                       sh 'mvn package'
                        dockerImage = docker.build registry + ":$BUILD_NUMBER"  
                        docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {   
                            dockerImage.push() }
