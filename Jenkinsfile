@@ -53,17 +53,13 @@ pipeline {
              steps{
                  node('docker-label')   
                  {
-                    script{
-                       git "https://github.com/SriPramod/project.git"
-                       sh "mvn package"
-                       dockerImage = docker.build registry + ":$BUILD_NUMBER"  
-                       docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {   
-                           dockerImage.push() }
-                       sh "docker rmi -f $registry:$BUILD_NUMBER"
-                       sh "mvn clean package"
+                    git 'https://github.com/SriPramod/project.git'
+                    sh 'mvn package'  
+                    sh "docker build -t SriPramod/project:${env.BUILD_ID} ." 
+  
                          }	
                  }
              }
-         }
-    }
+         
+    
 }
