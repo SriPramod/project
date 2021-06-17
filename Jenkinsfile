@@ -57,7 +57,7 @@ pipeline {
                    git 'https://github.com/SriPramod/project.git'
                    sh 'mvn package' 
                    script{
-                       dockerImage = docker.build registry + ":$BUILD_NUMBER"  
+                       dockerImage = sudo docker.build registry + ":$BUILD_NUMBER"  
                        docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {   
                            dockerImage.push() }
                        sh "docker rmi -f $registry:$BUILD_NUMBER"
