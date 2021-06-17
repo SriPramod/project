@@ -57,7 +57,9 @@ pipeline {
                    git 'https://github.com/SriPramod/project.git'
                    sh 'mvn package' 
                    echo 'Starting to build docker image'
+                  {
                    sudo chmod 666 /var/run/docker.sock
+                   }  
 
                    script{
                        dockerImage = docker.build registry + ":$BUILD_NUMBER"  
