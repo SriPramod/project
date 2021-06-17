@@ -1,6 +1,6 @@
 pipeline {
     environment {
-           registry = "SriPramod/myproject"
+           registry = "sripramod11/myproject"
            registryCredential = 'docker-hub'
            dockerImage = ''
     }
