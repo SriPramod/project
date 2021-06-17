@@ -18,7 +18,7 @@
     get_url: 
       url: https://get.docker.com/
       dest: /root/install_docker.sh
-      mode: 777
+      mode: 0700
     when: docker_check.stderr.find('service could not be found') != -1
   
   - name: Install Docker
