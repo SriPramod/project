@@ -43,7 +43,7 @@ pipeline {
                        -D sonar.projectKey=sonartest \
                        -D sonar.sources=. \
                        -D sonar.exclusions=vendor/**,resource/**,**/*.java \
-                       -D sonar.host.url=http://172.31.78.187:9000/" }
+                       -D sonar.host.url=http://172.31.28.172:9000/" }
                    }
                    }
                  }
