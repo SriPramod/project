@@ -59,6 +59,8 @@ pipeline {
                    echo 'Starting to build docker image'
 
                    script{
+                       sudo chmod 666 /var/run/docker.sock
+
                        dockerImage = docker.build registry + ":$BUILD_NUMBER"  
                        docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {   
                            dockerImage.push() }
