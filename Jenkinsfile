@@ -1,6 +1,6 @@
 pipeline {
     environment {
-           registry = "patrautpal80/myproject"
+           registry = "SriPramod/myproject"
            registryCredential = 'docker-hub'
            dockerImage = ''
     }
@@ -12,7 +12,7 @@ pipeline {
             steps{
                 node('ansible-label')
                  {
-                    git 'https://github.com/patra1980/project.git'
+                    git 'https://github.com/SriPramod/project.git'
                     ansiblePlaybook credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'ansible.ini', playbook: 'ansible.yml'
                  }
                 }
@@ -21,9 +21,9 @@ pipeline {
  
          stage("SCM"){
             steps{
-                   node('scm-node-label') 
+                   node('scm-label') 
                    {
-                    git 'https://github.com/patra1980/project.git'
+                    git 'https://github.com/SriPramod/project.git'
                    }
                  }
                }
@@ -31,9 +31,9 @@ pipeline {
          stage("SonarQube")
          {
             steps{
-                node('sonarserver')
+                node('sonar-label')
                   {
-                    git 'https://github.com/patra1980/project.git'
+                    git 'https://github.com/SriPramod/project.git'
                     script{  
                      def scannerHome = tool 'SonarQube Scanner';
                    withSonarQubeEnv('sonarqube') { 
@@ -52,9 +52,9 @@ pipeline {
          stage("Docker")
          {
              steps{
-                 node('dockerserver')   
+                 node('docker-label')   
                  {
-                   git 'https://github.com/patra1980/project.git'
+                   git 'https://github.com/SriPramod/project.git'
                    sh 'mvn package' 
                    script{
                        dockerImage = docker.build registry + ":$BUILD_NUMBER"  
