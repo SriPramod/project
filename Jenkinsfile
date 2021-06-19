@@ -59,10 +59,12 @@ pipeline {
                    echo 'Starting to build docker image'
                 script{
                        dockerImage = docker.build registry + ":$BUILD_NUMBER"  
-                       docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {   
-                           dockerImage.push() }
+                       docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {  
+                       dockerImage.push("$BUILD_NUMBER")
+                       dockerImage.push('latest') }
                        sh "docker rmi -f $registry:$BUILD_NUMBER"
-                         }	
+                       sh "docker rmi $registry:latest"
+                       }	
                  }
              }
          }
