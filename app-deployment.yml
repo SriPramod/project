@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myproject
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    tier: frontend
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myproject
+  labels:
+    app: calculator
+    tier: frontend
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+     tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: myapp
+        image: SriPramod/myproject:81
+        ports:
+           - containerPort: 9000
