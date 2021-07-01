@@ -49,6 +49,15 @@ pipeline {
                  }
         }
          
+         stage("NEXUS"){
+            steps{
+                   node('nexus-label') 
+                   {
+                    echo 'Nexus server is running for release'
+           
+                   }
+                 }
+               }   
          stage("Docker")
          {
              steps{
