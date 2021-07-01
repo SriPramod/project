@@ -24,6 +24,9 @@ pipeline {
                    node('scm-label') 
                    {
                     git 'https://github.com/SriPramod/project.git'
+                    sh 'mvn clean'
+                    sh 'mvn package'
+                    sh 'mvn deploy'
                    }
                  }
                }
