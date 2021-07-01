@@ -157,6 +157,29 @@
   - name: Install git
     yum:
       name: git
-      state: present      
+      state: present   
+      
+- name: install software in NEXUS servers
+  hosts: nexus
+  become: yes 
+  
+  tasks:
+  - name: install java
+    yum:
+      name: java-1.8.0*
+      state: present
+      
+  - name: unarchive nexus
+    unarchive:
+     src: https://download.sonatype.com/nexus/oss/nexus-2.14.18-01-bundle.tar.gz
+     dest: /home/centos/
+     remote_src: true
+    become: no
+
+  - name: start the nexus
+    command: "nohup /home/centos/nexus-2.14.18-01/bin/nexus start"
+    become: no
+    ignore_errors: yes    
+      
 ...
   
