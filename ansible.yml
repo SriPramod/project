@@ -56,8 +56,8 @@
         - docker_compose_check.msg is defined
         - docker_compose_check.msg.find('No such file or directory') != -1
         
-  -name: Grant access to docker sockets
-   ansible.builtin.command: chmod 777 /var/run/docker.sock
+  - name: Grant access to docker sockets
+    ansible.builtin.command: chmod 777 /var/run/docker.sock
     
    
   - name: Install git
